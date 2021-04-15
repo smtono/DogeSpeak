@@ -2,14 +2,16 @@ package Lexer;
 
 // TOKEN TYPES
 public enum TokenType {
+    // TODO: make operations just under the operator enum
     IDENTIFIER("identifier"),
     COMMENT_START("quite!!"),
     COMMENT_END("!!"),
+    OPERATOR(""),
     INTEGER(""),
     FLOAT(""),
     EQUAL("equel"),
-    ADD("plus"),
-    SUBTRACT("minus"),
+    ADD("add"),
+    SUBTRACT("sub"),
     MULTIPLY("timez"),
     DIVIDE("divid"),
     UNEXPECTED(""),

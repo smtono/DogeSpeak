@@ -14,7 +14,7 @@ public class Lexer {
     public Lexer(String text) {
         this.text = text;
         currentPosition = -1;
-        currentCharacter = '\u0000'; // Default null character
+        currentCharacter = 0; // Default null character
         advance();
     }
 
@@ -31,14 +31,14 @@ public class Lexer {
             this.currentCharacter = text.charAt(currentPosition);
         }
         else {
-            this.currentCharacter = '\u0000'; // Default null character
+            this.currentCharacter = 0; // Default null character
         }
     }
 
     public List<Token> makeTokens() {
         List<Token> tokens = new ArrayList<>();
 
-        while (currentCharacter != '\u0000') {
+        while (currentCharacter != 0) {
             switch (currentCharacter) {
 
                 // TODO: Fix DRY code (this code repeats in makeLexeme()
@@ -140,7 +140,7 @@ public class Lexer {
         int decimalCount = 0;
 
         // While the current character is not null, and is also a digit
-        while (currentCharacter != '\u0000' && DIGITS.contains(Character.toString(currentCharacter))) {
+        while (currentCharacter != 0 && DIGITS.contains(Character.toString(currentCharacter))) {
             if (currentCharacter == '.') {
 
                 // if the number already has a decimal, break out, since there cannot be more than one
@@ -153,6 +153,8 @@ public class Lexer {
             else {
                 number.append(currentCharacter);
             }
+
+            advance();
         }
 
         // TODO: IMPLEMENT AN ERROR FOR ADDING A LETTER
@@ -166,8 +168,9 @@ public class Lexer {
     }
 
     // CONSTANTS FOR FINDING KEYWORDS
+    // TODO: SPLIT INTO EVEN MORE SPECIFIC KEYWORDS (operator, control flow, etc)
     List<String> keywords = Arrays.asList(
-            "add", "minus", "timez", "divid", "equel", // arithmetic
+            "add", "sub", "timez", "divid", "equel", // arithmetic
             "bekom",
             "if", "and", "or", "not", // control flow
             "quite!!", "!!"); // comments
@@ -179,7 +182,7 @@ public class Lexer {
         StringBuilder lexeme = new StringBuilder(); // compare to keywords above at the end
 
         // While the current character is not null
-        while (currentCharacter != '\u0000') {
+        while (currentCharacter != 0) {
             switch (currentCharacter) {
                 // White space will be the terminator character
                 case ' ':
@@ -245,9 +248,12 @@ public class Lexer {
                 case 'y':
                 case 'z':
                     lexeme.append(currentCharacter);
+                    advance();
+                    break;
             }
         }
 
+        // TODO: check for operators and have that be the token
         List<TokenType> tokens = Arrays.asList(TokenType.values());
         // TODO: simplify this mess
         if (keywords.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
@@ -270,8 +276,22 @@ public class Lexer {
 
     // TODO: make a defined Pair class where we can return both Tokens AND Errors (errors not implemented yet)
     /** Runs the tokenizer on the text input */
-    public List<Token> tokenize(String code) {
+    public static List<Token> tokenize(String code) {
         Lexer lexer = new Lexer(code);
-        return lexer.makeTokens();
+
+        List<Token> tokens = lexer.makeTokens();
+        StringBuilder output = new StringBuilder();
+
+        // TODO: fix this so it prints like -> [(INTEGER: 1, OPERATOR: ADD, INTEGER: 1)]
+        tokens.forEach(token -> {
+            output.append("[" + token.getType() + "] ");
+            if (token.getValue() != null) {
+                output.append(token.getValue());
+            }
+        });
+
+        System.out.println(output);
+
+        return tokens;
     }
 }

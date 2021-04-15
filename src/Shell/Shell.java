@@ -1,5 +1,7 @@
 package Shell;
 
+import Lexer.Lexer;
+
 import java.util.Scanner;
 
 public class Shell {
@@ -8,7 +10,8 @@ public class Shell {
         while (true) {
             System.out.print("DogeSpeak > ");
             String input = scn.next();
-            System.out.print(input + "\n");
+            //System.out.print(input + "\n");
+            Lexer.tokenize(input);
         }
     }
 }
