@@ -1,6 +1,7 @@
 package Lexer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Lexer {
@@ -40,6 +41,7 @@ public class Lexer {
         while (currentCharacter != '\u0000') {
             switch (currentCharacter) {
 
+                // TODO: Fix DRY code (this code repeats in makeLexeme()
                 // checking whitespace characters
                 case ' ':
                 case '\t':
@@ -60,6 +62,7 @@ public class Lexer {
                 case '8':
                 case '9':
                     tokens.add(makeNumber());
+                    break;
 
                 // checking for characters which will make keywords
                 case 'a':
@@ -89,6 +92,7 @@ public class Lexer {
                 case 'y':
                 case 'z':
                     tokens.add(makeLexeme());
+                    break;
 
                 // checking capital letters which won't be allowed
                 case 'A':
@@ -117,7 +121,8 @@ public class Lexer {
                 case 'X':
                 case 'Y':
                 case 'Z':
-
+                    System.out.println("pls nao yellingg!!");
+                    break;
 
 
             }
@@ -150,6 +155,7 @@ public class Lexer {
             }
         }
 
+        // TODO: IMPLEMENT AN ERROR FOR ADDING A LETTER
         // Return either type int or type double (float)
         if (decimalCount == 1) {
             return new Token(TokenType.FLOAT, Double.parseDouble(number.toString()));
@@ -160,24 +166,112 @@ public class Lexer {
     }
 
     // CONSTANTS FOR FINDING KEYWORDS
-    String LETTERS = "abcdefghijklmnopqrstuvwxyz";
+    List<String> keywords = Arrays.asList(
+            "add", "minus", "timez", "divid", "equel", // arithmetic
+            "bekom",
+            "if", "and", "or", "not", // control flow
+            "quite!!", "!!"); // comments
 
-    // arithmetic
-    String addition = "add";
-    String subtraction = "minus";
-    String multiplication = "timez";
-    String division = "divid";
 
-    // variable instantiation
-    String initializeVariable = "bekom";
-
+    // TODO: break up this method into two parts where one deals with finding the actual token, and the other with the keyword
     /** Generates a keyword from a given input of characters */
     public Token makeLexeme() {
         StringBuilder lexeme = new StringBuilder(); // compare to keywords above at the end
 
         // While the current character is not null
         while (currentCharacter != '\u0000') {
+            switch (currentCharacter) {
+                // White space will be the terminator character
+                case ' ':
+                case '\t':
+                case '\r':
+                case '\n':
+                    break;
 
+                // checking capital letters which won't be allowed
+                case 'A':
+                case 'B':
+                case 'C':
+                case 'D':
+                case 'E':
+                case 'F':
+                case 'G':
+                case 'H':
+                case 'I':
+                case 'J':
+                case 'K':
+                case 'L':
+                case 'M':
+                case 'N':
+                case 'O':
+                case 'P':
+                case 'Q':
+                case 'R':
+                case 'S':
+                case 'T':
+                case 'U':
+                case 'V':
+                case 'W':
+                case 'X':
+                case 'Y':
+                case 'Z':
+                    System.out.println("pls nao yellingg!!");
+                    break;
+
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                case 'g':
+                case 'h':
+                case 'i':
+                case 'j':
+                case 'k':
+                case 'l':
+                case 'm':
+                case 'n':
+                case 'o':
+                case 'p':
+                case 'q':
+                case 'r':
+                case 's':
+                case 't':
+                case 'u':
+                case 'v':
+                case 'w':
+                case 'x':
+                case 'y':
+                case 'z':
+                    lexeme.append(currentCharacter);
+            }
         }
+
+        List<TokenType> tokens = Arrays.asList(TokenType.values());
+        // TODO: simplify this mess
+        if (keywords.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
+            for(int i = 0; i < keywords.size(); i++) { // iterating through all keywords in the list
+                if (keywords.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
+                    for(int j = 0; j < tokens.size(); j++) { // iterate through all the tokens
+                        if (keywords.get(i).equals(tokens.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
+                            return new Token(tokens.get(j)); // return that token
+                        }
+                    }
+                }
+            }
+        }
+        else { // else, it must be an identifier.
+            return new Token(TokenType.IDENTIFIER, lexeme.toString());
+        }
+        // if none of the above happened, it is an unexpected value
+        return new Token(TokenType.UNEXPECTED);
+    }
+
+    // TODO: make a defined Pair class where we can return both Tokens AND Errors (errors not implemented yet)
+    /** Runs the tokenizer on the text input */
+    public List<Token> tokenize(String code) {
+        Lexer lexer = new Lexer(code);
+        return lexer.makeTokens();
     }
 }
