@@ -59,8 +59,15 @@ public class Parser {
         return null;
     }
 
-    private void term() {
+    private Node getTerm() {
+        Node leftFactor = getFactor();
 
+        while (currentToken.isArithmeticOperation()) {
+            Token operatorToken = currentToken;
+            Node rightFactor = getFactor();
+            leftFactor = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
+        }
+        return leftFactor;
     }
 
     private void expression() {
