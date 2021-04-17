@@ -1,6 +1,10 @@
 package Parser;
 
+import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
+import Parser.Nodes.ArithmeticOperationNode;
+import Parser.Nodes.Node;
+import Parser.Nodes.NumberNode;
 
 import java.util.List;
 
@@ -33,10 +37,26 @@ public class Parser {
         }
     }
 
-    private void factor() {
+    /** Returns node type for given token */
+    private Node getFactor() {
         Token token = currentToken;
 
-        
+        switch (token.getType()) {
+            case INTEGER:
+            case FLOAT:
+                advance();
+                return new NumberNode(token);
+
+            case OPERATOR:
+            case EQUAL:
+            case IDENTIFIER:
+            case COMMENT_START:
+            case COMMENT_END:
+            case NONE:
+            case UNEXPECTED:
+        }
+
+        return null;
     }
 
     private void term() {
