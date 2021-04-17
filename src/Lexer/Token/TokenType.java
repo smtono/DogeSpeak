@@ -16,9 +16,7 @@ public enum TokenType {
 
     UNEXPECTED(""),
     NONE("");
-    
-    // TODO: write method that has a token as an argument
-    //  returns true if that token type is here
+
 
     private final String keyword;
     TokenType(String keyword) { this.keyword = keyword; }
