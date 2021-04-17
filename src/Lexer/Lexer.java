@@ -1,5 +1,7 @@
 package Lexer;
 
+import Lexer.Token.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,13 +22,11 @@ public class Lexer {
 
     // ACCESSORS
     public String getText() { return text; }
-    public int getCurrentPosition() { return currentPosition; }
-    public char getCurrentCharacter() { return currentCharacter; }
 
     // HELPER METHODS
     /** Goes to the next character in the text */
-    public void advance() {
-        this.currentPosition += 1;
+    private void advance() {
+        currentPosition += 1;
         if (this.currentPosition < text.length()) {
             this.currentCharacter = text.charAt(currentPosition);
         }
@@ -124,7 +124,11 @@ public class Lexer {
                     System.out.println("pls nao yellingg!!");
                     break;
 
-
+                // TODO: update for checking errors
+                default:
+                    char c = currentCharacter;
+                    advance();
+                    return new ArrayList<>();
             }
         }
 
@@ -170,10 +174,12 @@ public class Lexer {
     // CONSTANTS FOR FINDING KEYWORDS
     // TODO: SPLIT INTO EVEN MORE SPECIFIC KEYWORDS (operator, control flow, etc)
     List<String> keywords = Arrays.asList(
-            "add", "sub", "timez", "divid", "equel", // arithmetic
             "bekom",
-            "if", "and", "or", "not", // control flow
+            "if", "and", "or", "not",  "equel",// control flow
             "quite!!", "!!"); // comments
+    List<String> arithmeticOperations = Arrays.asList(
+            "add", "sub", "timez", "divid"// arithmetic
+    );
 
 
     // TODO: break up this method into two parts where one deals with finding the actual token, and the other with the keyword
@@ -250,18 +256,33 @@ public class Lexer {
                     lexeme.append(currentCharacter);
                     advance();
                     break;
+
+                default:
+
             }
         }
 
-        // TODO: check for operators and have that be the token
         List<TokenType> tokens = Arrays.asList(TokenType.values());
-        // TODO: simplify this mess
+        List<ArithmeticOperation> arithmeticOperationsTokens = Arrays.asList(ArithmeticOperation.values());
+
+        // TODO: simplify this mess （；´д｀）ゞ
         if (keywords.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
             for(int i = 0; i < keywords.size(); i++) { // iterating through all keywords in the list
                 if (keywords.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
                     for(int j = 0; j < tokens.size(); j++) { // iterate through all the tokens
                         if (keywords.get(i).equals(tokens.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
                             return new Token(tokens.get(j)); // return that token
+                        }
+                    }
+                }
+            }
+        }
+        else if (arithmeticOperations.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
+            for(int i = 0; i < arithmeticOperations.size(); i++) { // iterating through all keywords in the list
+                if (arithmeticOperations.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
+                    for(int j = 0; j < arithmeticOperationsTokens.size(); j++) { // iterate through all the tokens
+                        if (arithmeticOperations.get(i).equals(arithmeticOperationsTokens.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
+                            return new Token(TokenType.OPERATOR, arithmeticOperationsTokens.get(j)); // return that token
                         }
                     }
                 }
@@ -282,13 +303,17 @@ public class Lexer {
         List<Token> tokens = lexer.makeTokens();
         StringBuilder output = new StringBuilder();
 
-        // TODO: fix this so it prints like -> [(INTEGER: 1, OPERATOR: ADD, INTEGER: 1)]
+        // TODO: Fix the output of this. Why does it go to the next line???
+        output.append("(");
         tokens.forEach(token -> {
-            output.append("[" + token.getType() + "] ");
             if (token.getValue() != null) {
-                output.append(token.getValue());
+                output.append(token).append(", ");
+            }
+            else {
+                output.append(token.getType()).append(", ");
             }
         });
+        output.append(")");
 
         System.out.println(output);
 
