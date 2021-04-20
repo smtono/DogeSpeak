@@ -35,6 +35,7 @@ public class Lexer {
         }
     }
 
+    // TODO: make this return a list of TokenErrorPair(s)
     public List<Token> makeTokens() {
         List<Token> tokens = new ArrayList<>();
 
@@ -124,7 +125,7 @@ public class Lexer {
                     System.out.println("pls nao yellingg!!");
                     break;
 
-                // TODO: update for checking errors
+                // SHANNON TODO: update for checking errors
                 default:
                     char c = currentCharacter;
                     advance();
@@ -138,6 +139,7 @@ public class Lexer {
     // CONSTANT FOR PARSING NUMBERS
     String DIGITS = "0123456789";
 
+    // TODO: return a TokenErrorPair
     /** Generates a number from a given input of digits */
     public Token makeNumber() {
         StringBuilder number = new StringBuilder(); // check to see if possible to parse into int at end
@@ -146,7 +148,6 @@ public class Lexer {
         // While the current character is not null, and is also a digit
         while (currentCharacter != 0 && DIGITS.contains(Character.toString(currentCharacter))) {
             if (currentCharacter == '.') {
-
                 // if the number already has a decimal, break out, since there cannot be more than one
                 if (decimalCount == 1)
                     break;
@@ -161,7 +162,17 @@ public class Lexer {
             advance();
         }
 
-        // TODO: IMPLEMENT AN ERROR FOR ADDING A LETTER
+        // TODO: Check for letters/other characters, append error to token
+        /*
+                if (currentCharacter == 0) {
+                    check if integer or float (see code below)
+                    return the pair with no error
+                }
+                else {
+                    return token and invalid character error
+                }
+         */
+        
         // Return either type int or type double (float)
         if (decimalCount == 1) {
             return new Token(TokenType.FLOAT, Double.parseDouble(number.toString()));
@@ -175,13 +186,17 @@ public class Lexer {
     // TODO: SPLIT INTO EVEN MORE SPECIFIC KEYWORDS (operator, control flow, etc)
     List<String> keywords = Arrays.asList(
             "bekom",
-            "if", "and", "or", "not",  "equel",// control flow
+            "wen", "and", "or", "not",  "iz",// control flow
             "quite!!", "!!"); // comments
     List<String> arithmeticOperations = Arrays.asList(
             "add", "sub", "timez", "divid"// arithmetic
     );
+    //List<String> controlFlow = Arrays.asList(
+    //      ""
+    //)
 
 
+    // TODO: return TokenErrorPair
     // TODO: break up this method into two parts where one deals with finding the actual token, and the other with the keyword
     /** Generates a keyword from a given input of characters */
     public Token makeLexeme() {
@@ -265,6 +280,15 @@ public class Lexer {
         List<TokenType> tokens = Arrays.asList(TokenType.values());
         List<ArithmeticOperation> arithmeticOperationsTokens = Arrays.asList(ArithmeticOperation.values());
 
+        /*
+            private Token method()
+            
+            To get lexeme from StringBuilder: lexeme.toString();
+        // We are checking the lexeme against the values in the specific list
+            method(List<> keywordList, String lexeme) {
+                simplify the for loop
+            }
+         */
         // TODO: simplify this mess （；´д｀）ゞ
         if (keywords.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
             for(int i = 0; i < keywords.size(); i++) { // iterating through all keywords in the list
@@ -288,6 +312,8 @@ public class Lexer {
                 }
             }
         }
+        
+
         else { // else, it must be an identifier.
             return new Token(TokenType.IDENTIFIER, lexeme.toString());
         }
@@ -295,7 +321,7 @@ public class Lexer {
         return new Token(TokenType.UNEXPECTED);
     }
 
-    // TODO: make a defined Pair class where we can return both Tokens AND Errors (errors not implemented yet)
+    // Don't worry about this for now -> TODO: make a defined Pair class where we can return both Tokens AND Errors (errors not implemented yet)
     /** Runs the tokenizer on the text input */
     public static List<Token> tokenize(String code) {
         Lexer lexer = new Lexer(code);
@@ -303,7 +329,7 @@ public class Lexer {
         List<Token> tokens = lexer.makeTokens();
         StringBuilder output = new StringBuilder();
 
-        // TODO: Fix the output of this. Why does it go to the next line???
+        // Don't worry about this -> TODO: Fix the output of this. Why does it go to the next line???
         output.append("(");
         tokens.forEach(token -> {
             if (token.getValue() != null) {
@@ -319,4 +345,13 @@ public class Lexer {
 
         return tokens;
     }
+    
+    /*
+    // TODO: add "No Error" error
+    public static List<TokenErrorPair> tokenize(String code) {
+        Lexer lexer = new Lexer(code);
+        
+        
+    }
+    */
 }
