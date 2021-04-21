@@ -2,14 +2,18 @@ package Error;
 
 public class GenericError {
     // ERROR ATTRIBUTES
-    String errorName;
-    String details;
+    private final String errorName;
+    private final String details;
 
     // CONSTRUCTOR
     public GenericError(String errorName, String details) {
         this.errorName = errorName;
         this.details = details;
     }
+
+    // ACCESSORS
+    public String getErrorName() { return errorName; }
+    public String getDetails() { return details; }
 
     // HELPER METHODS
     @Override
