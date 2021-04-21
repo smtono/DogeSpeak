@@ -1,5 +1,6 @@
 package Parser;
 
+import Lexer.Lexer;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
 import Parser.Nodes.ArithmeticOperationNode;
@@ -22,6 +23,7 @@ public class Parser {
         this.tokens = tokens;
         currentPosition = -1;
         currentToken = null;
+        advance();
     }
 
     // ACCESSORS
@@ -37,6 +39,10 @@ public class Parser {
         }
     }
 
+    private Node parse() {
+        return getExpression();
+    }
+
     /** Returns node type for given token */
     private Node getFactor() {
         Token token = currentToken;
@@ -47,7 +53,13 @@ public class Parser {
                 advance();
                 return new NumberNode(token);
 
+            // Operator : check for each arithmetic operation
             case OPERATOR:
+                if (token.getValue().equals(ArithmeticOperation.ADD) || token.getValue().equals(ArithmeticOperation.SUBTRACT)) {
+
+                }
+
+            // Still need to define nodes for these
             case EQUAL:
             case IDENTIFIER:
             case COMMENT_START:
@@ -59,26 +71,38 @@ public class Parser {
         return null;
     }
 
+    // TODO: Simplify DRY code for getTerm() and getExpression()
     private Node getTerm() {
         Node leftFactor = getFactor();
 
         while (currentToken.isArithmeticOperation()) {
             Token operatorToken = currentToken;
+            advance();
             Node rightFactor = getFactor();
             leftFactor = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
         }
         return leftFactor;
     }
 
-    private void expression() {
+    private Node getExpression() {
+        Node leftTerm = getTerm();
 
+        while (currentToken.isArithmeticOperation()) {
+            Token operatorToken = currentToken;
+            advance();
+            Node rightFactor = getFactor();
+            leftTerm = new ArithmeticOperationNode(leftTerm, operatorToken, rightFactor);
+        }
+        return leftTerm;
     }
 
-    // TODO: fix
-    @Override
-    public String toString() {
-        return "Parser{" +
-                "tokens=" + tokens +
-                '}';
+    public static void run(String code) {
+        // Generate tokens
+        Lexer lexer = new Lexer(code);
+        List<Token> tokens = lexer.makeTokens();
+
+        // Generate AST
+        Parser parser = new Parser(tokens);
+        System.out.println(parser.parse());
     }
 }

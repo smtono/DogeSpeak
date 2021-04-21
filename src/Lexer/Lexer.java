@@ -35,10 +35,10 @@ public class Lexer {
         }
     }
 
+    List<Token> tokens = new ArrayList<>();
+
     // TODO: make this return a list of TokenErrorPair(s)
     public List<Token> makeTokens() {
-        List<Token> tokens = new ArrayList<>();
-
         while (currentCharacter != 0) {
             switch (currentCharacter) {
 
@@ -160,6 +160,7 @@ public class Lexer {
             }
 
             advance();
+
         }
 
         // TODO: Check for letters/other characters, append error to token
@@ -204,12 +205,17 @@ public class Lexer {
 
         // While the current character is not null
         while (currentCharacter != 0) {
+            if (DIGITS.contains(Character.toString(currentCharacter))) {
+                makeNumber();
+            }
+
             switch (currentCharacter) {
                 // White space will be the terminator character
                 case ' ':
                 case '\t':
                 case '\r':
                 case '\n':
+                    advance();
                     break;
 
                 // checking capital letters which won't be allowed
@@ -239,6 +245,7 @@ public class Lexer {
                 case 'X':
                 case 'Y':
                 case 'Z':
+                    advance();
                     System.out.println("pls nao yellingg!!");
                     break;
 
@@ -273,6 +280,7 @@ public class Lexer {
                     break;
 
                 default:
+                    break;
 
             }
         }
@@ -323,7 +331,7 @@ public class Lexer {
 
     // Don't worry about this for now -> TODO: make a defined Pair class where we can return both Tokens AND Errors (errors not implemented yet)
     /** Runs the tokenizer on the text input */
-    public static List<Token> tokenize(String code) {
+    public static List<Token> run(String code) {
         Lexer lexer = new Lexer(code);
 
         List<Token> tokens = lexer.makeTokens();
@@ -340,9 +348,6 @@ public class Lexer {
             }
         });
         output.append(")");
-
-        System.out.println(output);
-
         return tokens;
     }
     

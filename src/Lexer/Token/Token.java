@@ -41,7 +41,5 @@ public class Token {
     }
 
     @Override
-    public String toString() {
-        return type + " " + value;
-    }
+    public String toString() { return type + ": " + value; }
 }

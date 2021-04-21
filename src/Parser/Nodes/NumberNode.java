@@ -1,6 +1,7 @@
 package Parser.Nodes;
 
 import Lexer.Token.Token;
+import Lexer.Token.TokenType;
 
 /**
  *
@@ -17,6 +18,11 @@ public class NumberNode extends Node {
 
     // ACCESSORS
     public Token getToken() { return token; }
+
+    // HELPER METHODS
+    /** returns whether the token is an integer or float */
+    public boolean isInteger() { return token.getType().equals(TokenType.INTEGER); }
+    public boolean isFloat() { return token.getType().equals(TokenType.FLOAT); }
 
     @Override
     public String toString() {

@@ -26,7 +26,5 @@ public class ArithmeticOperationNode extends Node {
 
     // TODO: fix to show whole operation (left and right nodes)
     @Override
-    public String toString() {
-        return operation.toString();
-    }
+    public String toString() { return "(" + left.toString() + " " + operation.toString() + " " + right.toString() + ")"; }
 }
