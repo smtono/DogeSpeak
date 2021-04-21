@@ -6,14 +6,14 @@ import Lexer.Token.Token;
 
 public class TokenErrorPair {
     private final Token token;
-    private final Error.Error error;
+    private final GenericError error;
 
 
-    public TokenErrorPair(Token token, Error.Error error) {
+    public TokenErrorPair(Token token, GenericError error) {
         this.token = token;
         this.error = error;
     }
 
     public Token getToken() { return token; }
-    public Error.Error getError() { return error; }
+    public GenericError getError() { return error; }
 }

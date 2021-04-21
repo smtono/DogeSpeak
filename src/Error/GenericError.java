@@ -1,12 +1,12 @@
 package Error;
 
-public class Error {
+public class GenericError {
     // ERROR ATTRIBUTES
     String errorName;
     String details;
 
     // CONSTRUCTOR
-    public Error(String errorName, String details) {
+    public GenericError(String errorName, String details) {
         this.errorName = errorName;
         this.details = details;
     }
