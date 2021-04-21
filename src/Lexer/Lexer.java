@@ -173,7 +173,7 @@ public class Lexer {
                     return token and invalid character error
                 }
          */
-        
+
         // Return either type int or type double (float)
         if (decimalCount == 1) {
             return new Token(TokenType.FLOAT, Double.parseDouble(number.toString()));
@@ -205,18 +205,55 @@ public class Lexer {
 
         // While the current character is not null
         while (currentCharacter != 0) {
-            if (DIGITS.contains(Character.toString(currentCharacter))) {
-                makeNumber();
-            }
+            //if (DIGITS.contains(Character.toString(currentCharacter))) {
+              //  tokens.add(makeNumber());
+            //}
 
             switch (currentCharacter) {
                 // White space will be the terminator character
                 case ' ':
                 case '\t':
                 case '\r':
-                case '\n':
+                case '\n': {
                     advance();
-                    break;
+                    List<TokenType> tokenTypes = Arrays.asList(TokenType.values());
+                    List<ArithmeticOperation> arithmeticOperationsTokens = Arrays.asList(ArithmeticOperation.values());
+
+                      /*
+                        private Token method()
+
+                        To get lexeme from StringBuilder: lexeme.toString();
+                        // We are checking the lexeme against the values in the specific list
+                            method(List<> keywordList, String lexeme) {
+                                   simplify the for loop
+                            }
+                      */
+                    // TODO: simplify this mess （；´д｀）ゞ
+                    if (keywords.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
+                        for (int i = 0; i < keywords.size(); i++) { // iterating through all keywords in the list
+                            if (keywords.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
+                                for (int j = 0; j < tokenTypes.size(); j++) { // iterate through all the tokens
+                                    if (keywords.get(i).equals(tokenTypes.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
+                                        return new Token(tokenTypes.get(j)); // return that token
+                                    }
+                                }
+                            }
+                        }
+                    } else if (arithmeticOperations.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
+                        for (int i = 0; i < arithmeticOperations.size(); i++) { // iterating through all keywords in the list
+                            if (arithmeticOperations.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
+                                for (int j = 0; j < arithmeticOperationsTokens.size(); j++) { // iterate through all the tokens
+                                    if (arithmeticOperations.get(i).equals(arithmeticOperationsTokens.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
+                                        return new Token(TokenType.OPERATOR, arithmeticOperationsTokens.get(j)); // return that token
+                                    }
+                                }
+                            }
+                        }
+                    } else { // else, it must be an identifier.
+                        return new Token(TokenType.IDENTIFIER, lexeme.toString());
+                    }
+                }
+                break;
 
                 // checking capital letters which won't be allowed
                 case 'A':
@@ -283,47 +320,6 @@ public class Lexer {
                     break;
 
             }
-        }
-
-        List<TokenType> tokens = Arrays.asList(TokenType.values());
-        List<ArithmeticOperation> arithmeticOperationsTokens = Arrays.asList(ArithmeticOperation.values());
-
-        /*
-            private Token method()
-            
-            To get lexeme from StringBuilder: lexeme.toString();
-        // We are checking the lexeme against the values in the specific list
-            method(List<> keywordList, String lexeme) {
-                simplify the for loop
-            }
-         */
-        // TODO: simplify this mess （；´д｀）ゞ
-        if (keywords.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
-            for(int i = 0; i < keywords.size(); i++) { // iterating through all keywords in the list
-                if (keywords.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
-                    for(int j = 0; j < tokens.size(); j++) { // iterate through all the tokens
-                        if (keywords.get(i).equals(tokens.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
-                            return new Token(tokens.get(j)); // return that token
-                        }
-                    }
-                }
-            }
-        }
-        else if (arithmeticOperations.contains(lexeme.toString())) { // if the lexeme is a keyword, then it will be that keyword
-            for(int i = 0; i < arithmeticOperations.size(); i++) { // iterating through all keywords in the list
-                if (arithmeticOperations.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
-                    for(int j = 0; j < arithmeticOperationsTokens.size(); j++) { // iterate through all the tokens
-                        if (arithmeticOperations.get(i).equals(arithmeticOperationsTokens.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
-                            return new Token(TokenType.OPERATOR, arithmeticOperationsTokens.get(j)); // return that token
-                        }
-                    }
-                }
-            }
-        }
-        
-
-        else { // else, it must be an identifier.
-            return new Token(TokenType.IDENTIFIER, lexeme.toString());
         }
         // if none of the above happened, it is an unexpected value
         return new Token(TokenType.UNEXPECTED);
