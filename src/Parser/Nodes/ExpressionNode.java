@@ -1,24 +1,29 @@
 package Parser.Nodes;
 
+import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
 import Lexer.Token.TokenType;
 
-/**
- *
- */
-public class ArithmeticOperationNode extends Node {
+public class ExpressionNode extends Node {
     // ATTRIBUTES
-    private final Node left;
+    private final ArithmeticOperationNode left;
     private final Token operation;
     private final Node right;
 
     // CONSTRUCTOR
-    public ArithmeticOperationNode() {
-        this.left = new Node();
+    public ExpressionNode() {
+        this.left = new ArithmeticOperationNode();
         this.operation = new Token(TokenType.NONE);
         this.right = new Node();
     }
-    public ArithmeticOperationNode(NumberNode left, Token operation, NumberNode right) {
+    // operation is + or -
+    public ExpressionNode(ArithmeticOperationNode left, Token operation, ArithmeticOperationNode right) {
+        super(operation);
+        this.operation = operation;
+        this.left = left;
+        this.right = right;
+    }
+    public ExpressionNode(ArithmeticOperationNode left, Token operation, Node right) {
         super(operation);
         this.operation = operation;
         this.left = left;
