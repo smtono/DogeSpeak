@@ -37,6 +37,7 @@ public class Parser {
         }
     }
 
+    /** Parses each token to different terms/expressions to create an AST (abstract syntax tree) */
     private Node parse() {
         return getExpression();
     }
@@ -51,6 +52,7 @@ public class Parser {
                 advance();
                 return new NumberNode(token);
 
+             // TODO: fix for other types of syntax (right now only arithmetic works)
             // Operator : Should not begin with operator, return error
             case OPERATOR:
             // Still need to define nodes for these
@@ -62,6 +64,7 @@ public class Parser {
             case UNEXPECTED:
         }
 
+        // TODO: fix
         return null;
     }
 
@@ -70,13 +73,15 @@ public class Parser {
         NumberNode leftFactor = (NumberNode) getFactor();
         ArithmeticOperationNode term = new ArithmeticOperationNode();
 
-        //if ()
-
         // TODO: simplify condition
+        // check if the current token is still an add or subtract token
         while (currentToken.getValue().equals(ArithmeticOperation.ADD) || currentToken.getValue().equals(ArithmeticOperation.SUBTRACT)) {
             Token operatorToken = currentToken;
             advance();
+
+            // get the factor to add/subtract by
             NumberNode rightFactor = (NumberNode) getFactor();
+            // create a new term
             term = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
         }
         return term;
@@ -88,18 +93,24 @@ public class Parser {
         boolean inWhile = false;
 
         // TODO: simplify condition
+        // check if the current token is still a multiply or divide token
         while (currentToken.getValue().equals(ArithmeticOperation.MULTIPLY) || currentToken.getValue().equals(ArithmeticOperation.DIVIDE)) {
             inWhile = true;
             Token operatorToken = currentToken;
             advance();
+
+            // get the factor to multiply/divide by
             NumberNode rightFactor = (NumberNode) getFactor();
+            // create a new expression
             expression = new ExpressionNode(leftTerm, operatorToken, rightFactor);
         }
 
         // TODO: fix for error
+        // if the while loop was entered, it means there was more to read, and an expression was made
         if(inWhile) {
             return expression;
         }
+        // if it didn't, then we can just return the term we already made
         else {
             return leftTerm;
         }
