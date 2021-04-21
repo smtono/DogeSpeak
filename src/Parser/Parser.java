@@ -4,6 +4,7 @@ import Lexer.Lexer;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
 import Parser.Nodes.ArithmeticOperationNode;
+import Parser.Nodes.ExpressionNode;
 import Parser.Nodes.Node;
 import Parser.Nodes.NumberNode;
 
@@ -25,9 +26,6 @@ public class Parser {
         currentToken = null;
         advance();
     }
-
-    // ACCESSORS
-    public List<Token> getTokens() { return tokens; }
 
     // HELPER METHODS
     /** Goes to the next token in the list of tokens */
@@ -53,12 +51,8 @@ public class Parser {
                 advance();
                 return new NumberNode(token);
 
-            // Operator : check for each arithmetic operation
+            // Operator : Should not begin with operator, return error
             case OPERATOR:
-                if (token.getValue().equals(ArithmeticOperation.ADD) || token.getValue().equals(ArithmeticOperation.SUBTRACT)) {
-
-                }
-
             // Still need to define nodes for these
             case EQUAL:
             case IDENTIFIER:
@@ -72,28 +66,43 @@ public class Parser {
     }
 
     // TODO: Simplify DRY code for getTerm() and getExpression()
-    private Node getTerm() {
-        Node leftFactor = getFactor();
+    private ArithmeticOperationNode getTerm() {
+        NumberNode leftFactor = (NumberNode) getFactor();
+        ArithmeticOperationNode term = new ArithmeticOperationNode();
 
-        while (currentToken.isArithmeticOperation()) {
+        //if ()
+
+        // TODO: simplify condition
+        while (currentToken.getValue().equals(ArithmeticOperation.ADD) || currentToken.getValue().equals(ArithmeticOperation.SUBTRACT)) {
             Token operatorToken = currentToken;
             advance();
-            Node rightFactor = getFactor();
-            leftFactor = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
+            NumberNode rightFactor = (NumberNode) getFactor();
+            term = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
         }
-        return leftFactor;
+        return term;
     }
 
     private Node getExpression() {
-        Node leftTerm = getTerm();
+        ArithmeticOperationNode leftTerm = getTerm();
+        ExpressionNode expression = new ExpressionNode();
+        boolean inWhile = false;
 
-        while (currentToken.isArithmeticOperation()) {
+        // TODO: simplify condition
+        while (currentToken.getValue().equals(ArithmeticOperation.MULTIPLY) || currentToken.getValue().equals(ArithmeticOperation.DIVIDE)) {
+            inWhile = true;
             Token operatorToken = currentToken;
             advance();
-            Node rightFactor = getFactor();
-            leftTerm = new ArithmeticOperationNode(leftTerm, operatorToken, rightFactor);
+            NumberNode rightFactor = (NumberNode) getFactor();
+            expression = new ExpressionNode(leftTerm, operatorToken, rightFactor);
         }
-        return leftTerm;
+
+        // TODO: fix for error
+        if(inWhile) {
+            return expression;
+        }
+        else {
+            return leftTerm;
+        }
     }
 
     public static void run(String code) {
