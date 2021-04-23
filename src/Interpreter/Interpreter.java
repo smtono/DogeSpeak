@@ -55,12 +55,7 @@ public class Interpreter {
     }
 
     public static GenericNumber visitNumberNode(NumberNode node) {
-       // System.out.println("Found number node");
-
-        // TODO: uh...? fix?????? 0_0 (friq)
-        GenericNumber number = new GenericNumber(Double.parseDouble(String.valueOf(node.getToken().getValue())));
-        //System.out.println(number);
-        return number;
+        return new GenericNumber(Double.parseDouble(String.valueOf(node.getToken().getValue())));
     }
 
     // TODO: simplify, put run method in one place
