@@ -29,7 +29,7 @@ public class ArithmeticOperationNode extends Node {
     // ACCESSORS
     public Node getLeft() { return left; }
     // TODO ._.
-    public ArithmeticOperation getOperation() { return (ArithmeticOperation) operation.getValue(); }
+    public ArithmeticOperation getOperation() { return ArithmeticOperation.getArithmeticOperation(operation.getValue()); }
     public Node getRight() { return right; }
 
     // TODO: fix to show whole operation (left and right nodes)

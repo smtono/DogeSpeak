@@ -6,13 +6,13 @@ import Lexer.Token.TokenType;
 
 public class ExpressionNode extends Node {
     // ATTRIBUTES
-    private final ArithmeticOperationNode left;
+    private final Node left;
     private final Token operation;
     private final Node right;
 
     // CONSTRUCTOR
     public ExpressionNode() {
-        this.left = new ArithmeticOperationNode();
+        this.left = new Node();
         this.operation = new Token(TokenType.NONE);
         this.right = new Node();
     }
@@ -27,6 +27,12 @@ public class ExpressionNode extends Node {
         super(operation);
         this.operation = operation;
         this.left = left;
+        this.right = right;
+    }
+    public ExpressionNode(Node left, Token operation, Node right) {
+        super(operation);
+        this.left = left;
+        this.operation = operation;
         this.right = right;
     }
 

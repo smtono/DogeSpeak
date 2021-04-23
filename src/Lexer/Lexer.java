@@ -145,15 +145,16 @@ public class Lexer {
         StringBuilder number = new StringBuilder(); // check to see if possible to parse into int at end
         int decimalCount = 0;
 
+        // TODO: do not support doubles. only ints (return error if there is a decimal)
         // While the current character is not null, and is also a digit
         while (currentCharacter != 0 && DIGITS.contains(Character.toString(currentCharacter))) {
             if (currentCharacter == '.') {
                 // if the number already has a decimal, break out, since there cannot be more than one
-                if (decimalCount == 1)
-                    break;
+                //   if (decimalCount == 1)
+                break;
 
-                decimalCount += 1;
-                number.append(".");
+                //  decimalCount += 1;
+                //  number.append(".");
             }
             else {
                 number.append(currentCharacter);
@@ -175,12 +176,12 @@ public class Lexer {
          */
 
         // Return either type int or type double (float)
-        if (decimalCount == 1) {
-            return new Token(TokenType.FLOAT, Double.parseDouble(number.toString()));
-        }
-        else {
-            return new Token(TokenType.INTEGER, Integer.parseInt(number.toString()));
-        }
+        //if (decimalCount == 1) {
+        //    return new Token(TokenType.FLOAT, number.toString());
+        // }
+        //else {
+        return new Token(TokenType.INTEGER, number.toString());
+        // }
     }
 
     // CONSTANTS FOR FINDING KEYWORDS
@@ -206,7 +207,7 @@ public class Lexer {
         // While the current character is not null
         while (currentCharacter != 0) {
             //if (DIGITS.contains(Character.toString(currentCharacter))) {
-              //  tokens.add(makeNumber());
+            //  tokens.add(makeNumber());
             //}
 
             switch (currentCharacter) {
@@ -244,7 +245,7 @@ public class Lexer {
                             if (arithmeticOperations.get(i).equals(lexeme.toString())) { // if a keyword matches the lexeme then we get that token
                                 for (int j = 0; j < arithmeticOperationsTokens.size(); j++) { // iterate through all the tokens
                                     if (arithmeticOperations.get(i).equals(arithmeticOperationsTokens.get(j).getKeyword())) { // if the keyword equals the matching token, return that token
-                                        return new Token(TokenType.OPERATOR, arithmeticOperationsTokens.get(j)); // return that token
+                                        return new Token(TokenType.OPERATOR, arithmeticOperationsTokens.get(j).getKeyword()); // return that token
                                     }
                                 }
                             }

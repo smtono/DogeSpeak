@@ -6,23 +6,23 @@ import java.util.List;
 public class Token {
     // TOKEN ATTRIBUTES
     private final TokenType type;
-    private final Object value;
+    private final String value;
 
     // CONSTRUCTORS
-    public Token(TokenType type, Object value) {
+    public Token(TokenType type, String value) {
         this.type = type;
         this.value = value;
     }
     public Token(TokenType type) {
         this.type = type;
-        this.value = null;
+        this.value = "";
     }
 
     // ACCESSORS
     public TokenType getType() { return type; }
     
     // TODO: change this to string value? -> look at github
-    public Object getValue() { return value; }
+    public String getValue() { return value; }
 
     // HELPER METHODS
     /** Returns if a token type is an ArithmeticOperation or not */
@@ -30,7 +30,7 @@ public class Token {
         ArithmeticOperation[] operations = ArithmeticOperation.values();
 
         for (ArithmeticOperation operation : operations) {
-            if (operation.equals(value)) {
+            if (operation.getKeyword().equals(value)) {
                 return true;
             }
         }
