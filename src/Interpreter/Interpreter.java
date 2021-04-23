@@ -55,13 +55,9 @@ public class Interpreter {
     }
 
     public static GenericNumber visitNumberNode(NumberNode node) {
-<<<<<<< Updated upstream
-        return new GenericNumber(Double.parseDouble(String.valueOf(node.getToken().getValue())));
-=======
        // System.out.println("Found number node");
         //System.out.println(number);
         return new GenericNumber(Integer.parseInt(String.valueOf(node.getToken().getValue())));
->>>>>>> Stashed changes
     }
 
     // TODO: simplify, put run method in one place
