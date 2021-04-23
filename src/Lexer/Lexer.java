@@ -325,7 +325,8 @@ public class Lexer {
         return new Token(TokenType.UNEXPECTED);
     }
 
-    // Don't worry about this for now -> TODO: make a defined Pair class where we can return both Tokens AND Errors (errors not implemented yet)
+    // TODO: simplify, put run method in one place
+    // TODO: return errors
     /** Runs the tokenizer on the text input */
     public static List<Token> run(String code) {
         Lexer lexer = new Lexer(code);

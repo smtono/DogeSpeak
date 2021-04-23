@@ -1,5 +1,6 @@
 package Parser.Nodes;
 
+import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
 import Lexer.Token.TokenType;
 
@@ -27,7 +28,8 @@ public class ArithmeticOperationNode extends Node {
 
     // ACCESSORS
     public Node getLeft() { return left; }
-    public Token getOperation() { return operation; }
+    // TODO ._.
+    public ArithmeticOperation getOperation() { return (ArithmeticOperation) operation.getValue(); }
     public Node getRight() { return right; }
 
     // TODO: fix to show whole operation (left and right nodes)

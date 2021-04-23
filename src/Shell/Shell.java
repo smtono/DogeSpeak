@@ -1,5 +1,6 @@
 package Shell;
 
+import Interpreter.Interpreter;
 import Parser.Parser;
 
 import java.util.Scanner;
@@ -10,7 +11,7 @@ public class Shell {
         while (true) {
             System.out.print("DogeSpeak > ");
             String input = scn.nextLine();
-            Parser.run(input);
+            Interpreter.run(input);
         }
     }
 }

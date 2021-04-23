@@ -20,15 +20,17 @@ public class Token {
 
     // ACCESSORS
     public TokenType getType() { return type; }
+    
+    // TODO: change this to string value? -> look at github
     public Object getValue() { return value; }
 
     // HELPER METHODS
     /** Returns if a token type is an ArithmeticOperation or not */
     public boolean isArithmeticOperation() {
-        List<ArithmeticOperation> operations = Arrays.asList(ArithmeticOperation.values());
+        ArithmeticOperation[] operations = ArithmeticOperation.values();
 
-        for (int i = 0; i < operations.size(); i++) {
-            if (operations.get(i).equals(value)) {
+        for (ArithmeticOperation operation : operations) {
+            if (operation.equals(value)) {
                 return true;
             }
         }
