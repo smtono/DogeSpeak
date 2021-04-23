@@ -1,6 +1,7 @@
 package Interpreter;
 
-import Parser.Nodes.ArithmeticOperationNode;
+import Lexer.Token.ArithmeticOperation;
+import Parser.Nodes.ExpressionNode;
 import Parser.Nodes.Node;
 import Parser.Nodes.NumberNode;
 import Parser.Parser;
@@ -17,7 +18,7 @@ public class Interpreter {
                     System.out.println(visitNumberNode((NumberNode) node));
                     break;
                 case ARITHMETIC_OPERATION:
-                    System.out.println(visitOperationNode((ArithmeticOperationNode) node));
+                    System.out.println(visitOperationNode((ExpressionNode) node));
                     break;
                 case NONE:
                 default:
@@ -34,14 +35,13 @@ public class Interpreter {
         System.out.println("Error: No visit");
     }
 
-    public static GenericNumber visitOperationNode(ArithmeticOperationNode node) {
+    public static GenericNumber visitOperationNode(ExpressionNode node) {
         //System.out.println("Found operation node");
 
-        // TODO: holy shit
-        GenericNumber left = new GenericNumber(Double.parseDouble(String.valueOf(node.getLeft().getToken().getValue())));
-        double right = Double.parseDouble(String.valueOf(node.getRight().getToken().getValue()));
+        GenericNumber left = new GenericNumber(Integer.parseInt(String.valueOf(node.getLeft().getToken().getValue())));
+        int right = Integer.parseInt(String.valueOf(node.getRight().getToken().getValue()));
 
-        switch (node.getOperation()) {
+        switch (ArithmeticOperation.getArithmeticOperation(node.getOperation().getValue())) {
             case ADD:
                 return left.plus(right);
             case SUBTRACT:
@@ -55,7 +55,13 @@ public class Interpreter {
     }
 
     public static GenericNumber visitNumberNode(NumberNode node) {
+<<<<<<< Updated upstream
         return new GenericNumber(Double.parseDouble(String.valueOf(node.getToken().getValue())));
+=======
+       // System.out.println("Found number node");
+        //System.out.println(number);
+        return new GenericNumber(Integer.parseInt(String.valueOf(node.getToken().getValue())));
+>>>>>>> Stashed changes
     }
 
     // TODO: simplify, put run method in one place
