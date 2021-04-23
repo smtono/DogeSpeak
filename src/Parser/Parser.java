@@ -39,7 +39,15 @@ public class Parser {
 
     /** Parses each token to different terms/expressions to create an AST (abstract syntax tree) */
     private Node parse() {
-        return getExpression();
+
+        // TODO: refactor this for other syntax types, the following if-else WILL NOT WORK with other types
+        // For example, check if it's the only one, assert that it is a number node
+        if (tokens.size() == 1) { // if there is just 1 number then create a number node
+            return getFactor();
+        }
+        else {
+            return getExpression();
+        }
     }
 
     /** Returns node type for given token */
@@ -52,10 +60,10 @@ public class Parser {
                 advance();
                 return new NumberNode(token);
 
-             // TODO: fix for other types of syntax (right now only arithmetic works)
+            // TODO: fix for other types of syntax (right now only arithmetic works)
             // Operator : Should not begin with operator, return error
             case OPERATOR:
-            // Still need to define nodes for these
+                // Still need to define nodes for these
             case EQUAL:
             case IDENTIFIER:
             case COMMENT_START:
@@ -116,13 +124,15 @@ public class Parser {
         }
     }
 
-    public static void run(String code) {
+    // TODO: simplify, put run method in one place
+    public static Node run(String code) {
         // Generate tokens
         Lexer lexer = new Lexer(code);
         List<Token> tokens = lexer.makeTokens();
 
         // Generate AST
         Parser parser = new Parser(tokens);
-        System.out.println(parser.parse());
+        //System.out.println(parser.parse());
+        return parser.parse();
     }
 }
