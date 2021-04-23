@@ -77,13 +77,16 @@ public class Parser {
     }
 
     // TODO: Simplify DRY code for getTerm() and getExpression()
-    private ArithmeticOperationNode getTerm() {
+    private Node getTerm() {
         NumberNode leftFactor = (NumberNode) getFactor();
         ArithmeticOperationNode term = new ArithmeticOperationNode();
+        ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
+        boolean inIf = false;
 
-        // TODO: simplify condition
+        // TODO: this code looks so bad... uh//// fix????????????????????????????????????????????
         // check if the current token is still an add or subtract token
-        while (currentToken.getValue().equals(ArithmeticOperation.ADD) || currentToken.getValue().equals(ArithmeticOperation.SUBTRACT)) {
+        if (operation.equals(ArithmeticOperation.ADD) || operation.equals(ArithmeticOperation.SUBTRACT)) {
+            inIf = true;
             Token operatorToken = currentToken;
             advance();
 
@@ -92,17 +95,29 @@ public class Parser {
             // create a new term
             term = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
         }
-        return term;
+        if(inIf) {
+            return term;
+        }
+        // if it didn't, then we can just return the term we already made
+        else {
+            return leftFactor;
+        }
     }
 
     private Node getExpression() {
-        ArithmeticOperationNode leftTerm = getTerm();
+        Node leftTerm = new Node();
+        ArithmeticOperation nextNode = ArithmeticOperation.getArithmeticOperation(tokens.get(currentPosition + 1).getValue());
+       // if (nextNode.equals(ArithmeticOperation.MULTIPLY) || nextNode.equals(ArithmeticOperation.DIVIDE)) {
+           leftTerm = getTerm();
+       // }
+
         ExpressionNode expression = new ExpressionNode();
+        ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
         boolean inWhile = false;
 
-        // TODO: simplify condition
+        // TODO: simplify condition, DRY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^66 ╰（‵□′）╯（︶^︶）( ˘︹˘ )
         // check if the current token is still a multiply or divide token
-        while (currentToken.getValue().equals(ArithmeticOperation.MULTIPLY) || currentToken.getValue().equals(ArithmeticOperation.DIVIDE)) {
+        if (operation.equals(ArithmeticOperation.MULTIPLY) || operation.equals(ArithmeticOperation.DIVIDE)) {
             inWhile = true;
             Token operatorToken = currentToken;
             advance();
