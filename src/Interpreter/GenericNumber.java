@@ -1,27 +1,27 @@
 package Interpreter;
 
 public class GenericNumber {
-    private final double value;
+    private final int value;
 
     public GenericNumber() {this.value = 0;}
-    public GenericNumber(double value) {
+    public GenericNumber(int value) {
         this.value = value;
     }
 
     // ARITHMETIC OPERATIONS
-    public GenericNumber plus(double other) {
+    public GenericNumber plus(int other) {
         return new GenericNumber(value + other);
     }
 
-    public GenericNumber minus(double other) {
+    public GenericNumber minus(int other) {
         return new GenericNumber(value - other);
     }
 
-    public GenericNumber times(double other) {
+    public GenericNumber times(int other) {
         return new GenericNumber(value * other);
     }
 
-    public GenericNumber dividedBy(double other) {
+    public GenericNumber dividedBy(int other) {
         return new GenericNumber(value / other);
     }
 
