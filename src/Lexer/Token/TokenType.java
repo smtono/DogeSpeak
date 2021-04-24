@@ -3,8 +3,10 @@ package Lexer.Token;
 // TODO: Split into more specific token classes (and make generic interface)
 // TOKEN TYPES
 public enum TokenType {
-    // TODO: make operations just under the operator enum
-    IDENTIFIER("identifier"),
+    VARIABLE("wow"),
+    VARIABLE_INSTANTIATION("bekom"),
+
+    IDENTIFIER(""),
     COMMENT_START("quite!!"),
     COMMENT_END("!!"),
 
@@ -12,7 +14,7 @@ public enum TokenType {
 
     INTEGER(""),
     FLOAT(""),
-    EQUAL("equel"),
+    EQUAL("iz"),
 
     UNEXPECTED(""),
     NONE("");

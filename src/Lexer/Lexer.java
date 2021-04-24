@@ -187,7 +187,7 @@ public class Lexer {
     // CONSTANTS FOR FINDING KEYWORDS
     // TODO: SPLIT INTO EVEN MORE SPECIFIC KEYWORDS (operator, control flow, etc)
     List<String> keywords = Arrays.asList(
-            "bekom",
+            "bekom", "wow", // variable instantiation
             "wen", "and", "or", "not",  "iz",// control flow
             "quite!!", "!!"); // comments
     List<String> arithmeticOperations = Arrays.asList(
@@ -250,7 +250,7 @@ public class Lexer {
                                 }
                             }
                         }
-                    } else { // else, it must be an identifier.
+                    } else { // else, it must be an identifier. (variable name)
                         return new Token(TokenType.IDENTIFIER, lexeme.toString());
                     }
                 }
