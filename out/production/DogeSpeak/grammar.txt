@@ -3,6 +3,7 @@ Term: One operation (ex: 1 + 1)
 Factor: The individual numbers (ex: 3)
 
 expr    : term ((PLUS|MINUS) term)*
+        : KEYWORD:VAR IDENTIFIER EQ expr
 
 term    : factor ((MUL|DIV) factor)*
 
