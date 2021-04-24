@@ -3,10 +3,8 @@ package Parser;
 import Lexer.Lexer;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
-import Parser.Nodes.ArithmeticOperationNode;
-import Parser.Nodes.ExpressionNode;
-import Parser.Nodes.Node;
-import Parser.Nodes.NumberNode;
+import Lexer.Token.TokenType;
+import Parser.Nodes.*;
 
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class Parser {
         // TODO: refactor this for other syntax types, the following if-else WILL NOT WORK with other types
         // For example, check if it's the only one, assert that it is a number node
         if (tokens.size() == 1) { // if there is just 1 number then create a number node
-            return getFactor();
+            return getAtom();
         }
         else {
             return getExpression();
@@ -51,7 +49,7 @@ public class Parser {
     }
 
     /** Returns node type for given token */
-    private Node getFactor() {
+    private Node getAtom() {
         Token token = currentToken;
 
         switch (token.getType()) {
@@ -65,7 +63,12 @@ public class Parser {
             case OPERATOR:
                 // Still need to define nodes for these
             case EQUAL:
+
+            case VARIABLE:
             case IDENTIFIER:
+            case VARIABLE_INSTANTIATION:
+                // return new VariableAccessNode(token);
+
             case COMMENT_START:
             case COMMENT_END:
             case NONE:
@@ -78,7 +81,7 @@ public class Parser {
 
     // TODO: Simplify DRY code for getTerm() and getExpression()
     private Node getTerm() {
-        NumberNode leftFactor = (NumberNode) getFactor();
+        NumberNode leftFactor = (NumberNode) getAtom();
         ArithmeticOperationNode term = new ArithmeticOperationNode();
         ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
         boolean inIf = false;
@@ -91,7 +94,7 @@ public class Parser {
             advance();
 
             // get the factor to add/subtract by
-            NumberNode rightFactor = (NumberNode) getFactor();
+            NumberNode rightFactor = (NumberNode) getAtom();
             // create a new term
             term = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
         }
@@ -105,11 +108,26 @@ public class Parser {
     }
 
     private Node getExpression() {
-        Node leftTerm = new Node();
-        ArithmeticOperation nextNode = ArithmeticOperation.getArithmeticOperation(tokens.get(currentPosition + 1).getValue());
-       // if (nextNode.equals(ArithmeticOperation.MULTIPLY) || nextNode.equals(ArithmeticOperation.DIVIDE)) {
-           leftTerm = getTerm();
-       // }
+       // Check for variable instantiation
+        if (currentToken.getType().equals(TokenType.VARIABLE)) {
+            advance();
+            if(!currentToken.getType().equals(TokenType.IDENTIFIER)) {
+                return new Node(new Token(TokenType.NONE)); // failure
+            }
+            else {
+                Token varName = currentToken;
+                advance();
+                if(!currentToken.getType().equals(TokenType.VARIABLE_INSTANTIATION)) {
+                    return new Node(new Token(TokenType.NONE)); // failure
+                }
+                else {
+
+                }
+            }
+        }
+
+        // Check for arithmetic expression
+        Node leftTerm = getTerm();
 
         ExpressionNode expression = new ExpressionNode();
         ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
@@ -123,7 +141,7 @@ public class Parser {
             advance();
 
             // get the factor to multiply/divide by
-            NumberNode rightFactor = (NumberNode) getFactor();
+            NumberNode rightFactor = (NumberNode) getAtom();
             // create a new expression
             expression = new ExpressionNode(leftTerm, operatorToken, rightFactor);
         }
