@@ -1,5 +1,6 @@
 package Parser.Nodes;
 
+import Interpreter.GenericNumber;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
 import Lexer.Token.TokenType;
@@ -31,6 +32,20 @@ public class ArithmeticOperationNode extends Node {
     // TODO ._.
     public ArithmeticOperation getOperation() { return ArithmeticOperation.getArithmeticOperation(operation.getValue()); }
     public Node getRight() { return right; }
+
+    // HELPER METHODS
+    public GenericNumber evaluateExpression() {
+        GenericNumber left = new GenericNumber(Integer.parseInt(String.valueOf(getLeft().toString())));
+        int right = Integer.parseInt(String.valueOf(getRight().toString()));
+
+        switch (ArithmeticOperation.getArithmeticOperation(operation.getValue())) {
+            case ADD:
+                return left.plus(right);
+            case SUBTRACT:
+                return left.minus(right);
+        }
+        return new GenericNumber();
+    }
 
     // TODO: fix to show whole operation (left and right nodes)
     @Override
