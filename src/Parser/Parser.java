@@ -64,11 +64,12 @@ public class Parser {
                 // Still need to define nodes for these
             case EQUAL:
 
-            case VARIABLE:
+            //case VARIABLE:
             case IDENTIFIER:
-            case VARIABLE_INSTANTIATION:
+                advance();
+                return new VariableAccessNode(token);
+            //case VARIABLE_INSTANTIATION:
                 // return new VariableAccessNode(token);
-
             case COMMENT_START:
             case COMMENT_END:
             case NONE:
@@ -82,6 +83,7 @@ public class Parser {
     // TODO: Simplify DRY code for getTerm() and getExpression()
     private Node getTerm() {
         NumberNode leftFactor = (NumberNode) getAtom();
+
         ArithmeticOperationNode term = new ArithmeticOperationNode();
         ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
         boolean inIf = false;
@@ -95,8 +97,14 @@ public class Parser {
 
             // get the factor to add/subtract by
             NumberNode rightFactor = (NumberNode) getAtom();
+
             // create a new term
-            term = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
+            try {
+                term = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
+            }
+            catch (Exception e) {
+                System.out.println("Token does not exist");
+            }
         }
         if(inIf) {
             return term;
@@ -121,7 +129,14 @@ public class Parser {
                     return new Node(new Token(TokenType.NONE)); // failure
                 }
                 else {
-
+                    advance();
+                    try {
+                        Node expression = getExpression();
+                        return new VariableAssignmentNode(varName, expression);
+                    }
+                    catch (Exception e) {
+                        return new Node(new Token(TokenType.NONE)); // failure
+                    }
                 }
             }
         }
