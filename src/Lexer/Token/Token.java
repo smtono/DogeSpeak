@@ -6,7 +6,7 @@ import java.util.List;
 public class Token {
     // TOKEN ATTRIBUTES
     private final TokenType type;
-    private final String value;
+    private String value;
 
     // CONSTRUCTORS
     public Token(TokenType type, String value) {
@@ -18,12 +18,12 @@ public class Token {
         this.value = "";
     }
 
-    // ACCESSORS
+    // ACCESSORS/MUTATORS
     public TokenType getType() { return type; }
     
-    // TODO: change this to string value? -> look at github
     public String getValue() { return value; }
-
+    public void setValue(String value) { this.value = value; }
+    
     // HELPER METHODS
     /** Returns if a token type is an ArithmeticOperation or not */
     public boolean isArithmeticOperation() {
@@ -43,5 +43,5 @@ public class Token {
     }
 
     @Override
-    public String toString() { return type + ": " + value; }
+    public String toString() { return value; }
 }
