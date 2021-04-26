@@ -16,8 +16,6 @@
   - divid (division)
 - String Concatenation
   - (in progress)
-- Control Flow
-  - wen (if)
-  - els (else)
-  - iz (equal)
-  - then ( { } )
+- Variable Instantiation
+  - wow (var)
+  - bekom (= or instantiation)
