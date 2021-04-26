@@ -5,7 +5,7 @@ import Parser.Nodes.*;
 import Parser.Parser;
 
 public class Interpreter {
-    static VariableDictionary variables = new VariableDictionary(); // this might be bad practice oh well .-.
+    public static VariableDictionary variables = new VariableDictionary(); // this might be bad practice oh well .-.
 
     // VISIT METHODS
     /** "Visits" each node in the expression and evaluates as necessary with the corresponding method call */

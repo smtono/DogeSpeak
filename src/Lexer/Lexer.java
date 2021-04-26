@@ -215,7 +215,8 @@ public class Lexer {
                 case ' ':
                 case '\t':
                 case '\r':
-                case '\n': {
+                case '\n':
+                case '\u0000': {
                     advance();
                     List<TokenType> tokenTypes = Arrays.asList(TokenType.values());
                     List<ArithmeticOperation> arithmeticOperationsTokens = Arrays.asList(ArithmeticOperation.values());
@@ -322,8 +323,7 @@ public class Lexer {
 
             }
         }
-        // if none of the above happened, it is an unexpected value
-        return new Token(TokenType.UNEXPECTED);
+        return new Token(TokenType.IDENTIFIER, lexeme.toString());
     }
 
     // TODO: simplify, put run method in one place

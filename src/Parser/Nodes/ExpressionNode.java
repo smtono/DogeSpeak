@@ -17,19 +17,7 @@ public class ExpressionNode extends Node {
         this.operation = new Token(TokenType.NONE);
         this.right = new Node();
     }
-    // operation is + or -
-    public ExpressionNode(ArithmeticOperationNode left, Token operation, ArithmeticOperationNode right) {
-        super(operation);
-        this.operation = operation;
-        this.left = left;
-        this.right = right;
-    }
-    public ExpressionNode(ArithmeticOperationNode left, Token operation, Node right) {
-        super(operation);
-        this.operation = operation;
-        this.left = left;
-        this.right = right;
-    }
+
     public ExpressionNode(Node left, Token operation, Node right) {
         super(operation);
         this.left = left;

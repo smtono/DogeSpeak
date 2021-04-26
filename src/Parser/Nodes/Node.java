@@ -47,7 +47,7 @@ public class Node {
 
     // other
     public GenericNumber evaluateExpression() {
-        return new GenericNumber();
+        return new GenericNumber(Integer.parseInt(token.getValue()));
     }
 
     @Override
