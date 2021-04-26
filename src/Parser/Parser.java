@@ -1,5 +1,6 @@
 package Parser;
 
+import Interpreter.Interpreter;
 import Lexer.Lexer;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
@@ -64,12 +65,12 @@ public class Parser {
                 // Still need to define nodes for these
             case EQUAL:
 
-            //case VARIABLE:
+                //case VARIABLE:
             case IDENTIFIER:
                 advance();
                 return new VariableAccessNode(token);
             //case VARIABLE_INSTANTIATION:
-                // return new VariableAccessNode(token);
+            // return new VariableAccessNode(token);
             case COMMENT_START:
             case COMMENT_END:
             case NONE:
@@ -80,43 +81,55 @@ public class Parser {
         return null;
     }
 
+
     // TODO: Simplify DRY code for getTerm() and getExpression()
     private Node getTerm() {
-        NumberNode leftFactor = (NumberNode) getAtom();
 
-        ArithmeticOperationNode term = new ArithmeticOperationNode();
+        Node leftAtom = getAtom();
+
         ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
-        boolean inIf = false;
 
-        // TODO: this code looks so bad... uh//// fix????????????????????????????????????????????
         // check if the current token is still an add or subtract token
         if (operation.equals(ArithmeticOperation.ADD) || operation.equals(ArithmeticOperation.SUBTRACT)) {
-            inIf = true;
+            NumberNode left = new NumberNode(new Token(TokenType.NONE));
+            NumberNode right = new NumberNode(new Token(TokenType.NONE));
+
             Token operatorToken = currentToken;
             advance();
 
             // get the factor to add/subtract by
-            NumberNode rightFactor = (NumberNode) getAtom();
+            Node rightAtom = getAtom();
+
+            // check type of node for factors
+            // left atom
+            if (leftAtom instanceof VariableAccessNode) {
+                left = new NumberNode(new Token(TokenType.INTEGER, Interpreter.variables.getValue(leftAtom.getToken().getValue())));
+            }
+            else if (leftAtom instanceof NumberNode) {
+                left = (NumberNode) leftAtom;
+            }
+
+            // right atom
+            if (rightAtom instanceof VariableAccessNode) {
+                right = new NumberNode(new Token(TokenType.INTEGER, Interpreter.variables.getValue(rightAtom.getToken().getValue())));
+            }
+            else if (rightAtom instanceof NumberNode) {
+                right = (NumberNode) rightAtom;
+            }
 
             // create a new term
             try {
-                term = new ArithmeticOperationNode(leftFactor, operatorToken, rightFactor);
+                return new ArithmeticOperationNode(left, operatorToken, right);
             }
             catch (Exception e) {
                 System.out.println("Token does not exist");
             }
         }
-        if(inIf) {
-            return term;
-        }
-        // if it didn't, then we can just return the term we already made
-        else {
-            return leftFactor;
-        }
+        return leftAtom; // If the term did not return, then just return the left atom
     }
 
     private Node getExpression() {
-       // Check for variable instantiation
+        // Check for variable instantiation
         if (currentToken.getType().equals(TokenType.VARIABLE)) {
             advance();
             if(!currentToken.getType().equals(TokenType.IDENTIFIER)) {
@@ -140,6 +153,8 @@ public class Parser {
                 }
             }
         }
+
+
 
         // Check for arithmetic expression
         Node leftTerm = getTerm();
