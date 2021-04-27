@@ -15,9 +15,8 @@
   - timez (multiplication)
   - divid (division)
 - String Concatenation
-  - (in progress)
-- Control Flow
-  - wen (if)
-  - els (else)
-  - iz (equal)
-  - then ( { } )
+  - "string" (in double quotes)
+  - "string" add "string" (string concatenation)
+- Variable Instantiation
+  - wow (var)
+  - bekom (= or instantiation)
