@@ -15,7 +15,8 @@
   - timez (multiplication)
   - divid (division)
 - String Concatenation
-  - (in progress)
+  - "string" (in double quotes)
+  - "string" add "string" (string concatenation)
 - Variable Instantiation
   - wow (var)
   - bekom (= or instantiation)
