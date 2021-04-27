@@ -1,4 +1,4 @@
-package Interpreter;
+package Interpreter.Values;
 
 public class GenericNumber {
     private final int value;

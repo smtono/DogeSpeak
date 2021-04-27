@@ -1,6 +1,6 @@
 package Parser.Nodes;
 
-import Interpreter.GenericNumber;
+import Interpreter.Values.GenericNumber;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
 import Lexer.Token.TokenType;

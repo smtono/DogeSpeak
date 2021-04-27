@@ -1,6 +1,7 @@
 package Parser.Nodes;
 
-import Interpreter.GenericNumber;
+import Interpreter.Values.GenericNumber;
+import Interpreter.Values.GenericString;
 import Lexer.Token.Token;
 
 public class VariableAssignmentNode extends Node {
@@ -22,6 +23,10 @@ public class VariableAssignmentNode extends Node {
     @Override
     public GenericNumber evaluateExpression() {
        return getValue().evaluateExpression();
+    }
+
+    public GenericString evaluateString() {
+        return new GenericString(getValue().getToken().getValue());
     }
 
     @Override

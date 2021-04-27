@@ -1,6 +1,7 @@
 package Parser;
 
 import Interpreter.Interpreter;
+import Interpreter.Values.GenericString;
 import Lexer.Lexer;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
@@ -58,34 +59,37 @@ public class Parser {
             case FLOAT:
                 advance();
                 return new NumberNode(token);
-
-            // TODO: fix for other types of syntax (right now only arithmetic works)
-            // Operator : Should not begin with operator, return error
-            case OPERATOR:
-                // Still need to define nodes for these
-            case EQUAL:
-
-                //case VARIABLE:
+            case STRING:
+                advance();
+                return new StringNode(token);
             case IDENTIFIER:
                 advance();
                 return new VariableAccessNode(token);
-            //case VARIABLE_INSTANTIATION:
-            // return new VariableAccessNode(token);
-            case COMMENT_START:
-            case COMMENT_END:
             case NONE:
             case UNEXPECTED:
+                return new Node();
         }
-
-        // TODO: fix
-        return null;
+        return new Node();
     }
 
-
-    // TODO: Simplify DRY code for getTerm() and getExpression()
     private Node getTerm() {
 
         Node leftAtom = getAtom();
+
+        // check if it is a string, if it is we know we need to concatenate
+        if (leftAtom instanceof StringNode) {
+            advance();
+            if (currentPosition > tokens.size()) { // if we get to the end of the list we don't need to make an expression
+                return leftAtom;
+            }
+            try {
+                StringNode rightAtom = (StringNode) getAtom();
+               return new StringConcatenationNode((StringNode) leftAtom, rightAtom);
+            }
+            catch (Exception e) {
+                System.out.println("Invalid syntax");
+            }
+        }
 
         ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
 
@@ -154,37 +158,28 @@ public class Parser {
             }
         }
 
-
+        if (currentToken.getType().equals(TokenType.STRING)) {
+          return getTerm();
+        }
 
         // Check for arithmetic expression
         Node leftTerm = getTerm();
-
-        ExpressionNode expression = new ExpressionNode();
         ArithmeticOperation operation = ArithmeticOperation.getArithmeticOperation(currentToken.getValue());
-        boolean inWhile = false;
 
-        // TODO: simplify condition, DRY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^66 ╰（‵□′）╯（︶^︶）( ˘︹˘ )
         // check if the current token is still a multiply or divide token
         if (operation.equals(ArithmeticOperation.MULTIPLY) || operation.equals(ArithmeticOperation.DIVIDE)) {
-            inWhile = true;
             Token operatorToken = currentToken;
             advance();
 
             // get the factor to multiply/divide by
             NumberNode rightFactor = (NumberNode) getAtom();
             // create a new expression
-            expression = new ExpressionNode(leftTerm, operatorToken, rightFactor);
+            return new ExpressionNode(leftTerm, operatorToken, rightFactor);
         }
 
-        // TODO: fix for error
-        // if the while loop was entered, it means there was more to read, and an expression was made
-        if(inWhile) {
-            return expression;
-        }
+        // if the if was entered, it means there was more to read, and an expression was made
         // if it didn't, then we can just return the term we already made
-        else {
-            return leftTerm;
-        }
+        return leftTerm;
     }
 
     // TODO: simplify, put run method in one place

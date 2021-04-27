@@ -1,6 +1,7 @@
 package Interpreter;
 
-import Lexer.Token.ArithmeticOperation;
+import Interpreter.Values.GenericNumber;
+import Interpreter.Values.GenericString;
 import Parser.Nodes.*;
 import Parser.Parser;
 
@@ -17,7 +18,20 @@ public class Interpreter {
                     System.out.println(visitNumberNode((NumberNode) node));
                     break;
                 case ARITHMETIC_OPERATION:
-                    System.out.println(visitOperationNode((ArithmeticOperationNode) node));
+                    if (node instanceof ArithmeticOperationNode) {
+                        System.out.println(visitArithmeticOperationNode((ArithmeticOperationNode) node));
+                    }
+                    else if (node instanceof ExpressionNode) {
+                        System.out.println(visitExpressionNode((ExpressionNode) node));
+                    }
+                    break;
+                case STRING:
+                    if (node instanceof StringConcatenationNode) {
+                        System.out.println(visitStringConcatenationNode((StringConcatenationNode) node));
+                    }
+                    else if (node instanceof StringNode) {
+                        System.out.println(visitStringNode((StringNode) node));
+                    }
                     break;
                 case VARIABLE:
                     visitVariableAssignmentNode((VariableAssignmentNode) node);
@@ -39,24 +53,53 @@ public class Interpreter {
         System.out.println("Error: No visit");
     }
 
-    public static GenericNumber visitOperationNode(ArithmeticOperationNode node) {
+    public static GenericNumber visitArithmeticOperationNode(ArithmeticOperationNode node) {
         if (node.getLeft().getNodeType().equals(NodeType.VARIABLE)) {
-            String variableValue = visitVariableAccessNode(node);
-            node.getToken().setValue(variableValue);
+            String variableValue = visitVariableAccessNode(node.getLeft());
+            node.getLeft().getToken().setValue(variableValue);
+        }
+        if (node.getRight().getNodeType().equals(NodeType.VARIABLE)) {
+            String variableValue = visitVariableAccessNode(node.getRight());
+            node.getRight().getToken().setValue(variableValue);
         }
         return node.evaluateExpression();
     }
 
+    public static GenericNumber visitExpressionNode(ExpressionNode node) {
+        if (node.getLeft().getNodeType().equals(NodeType.VARIABLE)) {
+            String variableValue = visitVariableAccessNode(node.getLeft());
+            node.getLeft().getToken().setValue(variableValue);
+        }
+        if (node.getRight().getNodeType().equals(NodeType.VARIABLE)) {
+            String variableValue = visitVariableAccessNode(node.getRight());
+            node.getRight().getToken().setValue(variableValue);
+        }
+        return node.evaluateExpression();
+    }
+
+    public static GenericString visitStringConcatenationNode(StringConcatenationNode node) {
+        return node.concatenateStrings();
+    }
+
     public static GenericNumber visitNumberNode(NumberNode node) {
-       // System.out.println("Found number node");
-        //System.out.println(number);
         return new GenericNumber(Integer.parseInt(String.valueOf(node.getToken().getValue())));
+    }
+
+    public static GenericString visitStringNode(StringNode node) {
+        return new GenericString(node.getToken().getValue());
     }
 
     /** returns the value of the variable assignment node associated with the variable name passed */
     public static void visitVariableAssignmentNode(VariableAssignmentNode node) {
         String variableName = node.getToken().getValue();
-        String value = node.getValue().evaluateExpression().toString();
+        String value = "";
+
+        if (node.getNodeType().equals(NodeType.NUMBER)) {
+            value = node.getValue().evaluateExpression().toString();
+        }
+        else if (node.getNodeType().equals(NodeType.STRING)) {
+            value = node.evaluateString().toString();
+        }
 
         variables.addVariable(variableName, value); // add new variable to dictionary
     }

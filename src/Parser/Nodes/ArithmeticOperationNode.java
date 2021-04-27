@@ -1,6 +1,6 @@
 package Parser.Nodes;
 
-import Interpreter.GenericNumber;
+import Interpreter.Values.GenericNumber;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
 import Lexer.Token.TokenType;
@@ -29,7 +29,6 @@ public class ArithmeticOperationNode extends Node {
 
     // ACCESSORS
     public Node getLeft() { return left; }
-    // TODO ._.
     public ArithmeticOperation getOperation() { return ArithmeticOperation.getArithmeticOperation(operation.getValue()); }
     public Node getRight() { return right; }
 

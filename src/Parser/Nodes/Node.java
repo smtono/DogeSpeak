@@ -1,6 +1,6 @@
 package Parser.Nodes;
 
-import Interpreter.GenericNumber;
+import Interpreter.Values.GenericNumber;
 import Lexer.Token.Token;
 import Lexer.Token.TokenType;
 
@@ -20,6 +20,11 @@ public class Node {
         this.nodeType = NodeType.NONE;
     }
 
+    public Node(NodeType nodeType) {
+        this.token = new Token(TokenType.NONE);
+        this.nodeType = nodeType;
+    }
+
     public Node(Token token) {
         this.token = token;
 
@@ -27,6 +32,9 @@ public class Node {
             case INTEGER:
             case FLOAT:
                 this.nodeType = NodeType.NUMBER;
+                break;
+            case STRING:
+                this.nodeType = NodeType.STRING;
                 break;
             case OPERATOR:
                 this.nodeType = NodeType.ARITHMETIC_OPERATION;
@@ -39,6 +47,10 @@ public class Node {
             default:
                 this.nodeType = NodeType.NONE;
         }
+    }
+    public Node(Token token, NodeType nodeType) {
+        this.token = token;
+        this.nodeType = nodeType;
     }
 
     // ACCESSORS

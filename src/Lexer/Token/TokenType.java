@@ -16,6 +16,8 @@ public enum TokenType {
     FLOAT(""),
     EQUAL("iz"),
 
+    STRING(""),
+
     UNEXPECTED(""),
     NONE("");
 
