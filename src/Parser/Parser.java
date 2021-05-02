@@ -1,7 +1,6 @@
 package Parser;
 
 import Interpreter.Interpreter;
-import Interpreter.Values.GenericString;
 import Lexer.Lexer;
 import Lexer.Token.ArithmeticOperation;
 import Lexer.Token.Token;
@@ -39,10 +38,7 @@ public class Parser {
 
     /** Parses each token to different terms/expressions to create an AST (abstract syntax tree) */
     private Node parse() {
-
-        // TODO: refactor this for other syntax types, the following if-else WILL NOT WORK with other types
-        // For example, check if it's the only one, assert that it is a number node
-        if (tokens.size() == 1) { // if there is just 1 number then create a number node
+        if (tokens.size() == 1) { // if there is just 1 token skip to getAtom
             return getAtom();
         }
         else {

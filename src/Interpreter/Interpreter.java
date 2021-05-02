@@ -2,6 +2,7 @@ package Interpreter;
 
 import Interpreter.Values.GenericNumber;
 import Interpreter.Values.GenericString;
+import Lexer.Token.TokenType;
 import Parser.Nodes.*;
 import Parser.Parser;
 
@@ -11,7 +12,6 @@ public class Interpreter {
     // VISIT METHODS
     /** "Visits" each node in the expression and evaluates as necessary with the corresponding method call */
     public static void visit(Node node) {
-        // TODO: fix this garbage it's "BAD PRACTICE" (╬▔皿▔)╯
         try {
             switch (node.getNodeType()) {
                 case NUMBER:
@@ -89,15 +89,18 @@ public class Interpreter {
         return new GenericString(node.getToken().getValue());
     }
 
-    /** returns the value of the variable assignment node associated with the variable name passed */
+    /** Returns the value of the variable assignment node associated with the variable name passed */
     public static void visitVariableAssignmentNode(VariableAssignmentNode node) {
         String variableName = node.getToken().getValue();
         String value = "";
 
-        if (node.getNodeType().equals(NodeType.NUMBER)) {
+        if (node.getValue().getToken().getType().equals(TokenType.INTEGER)) {
             value = node.getValue().evaluateExpression().toString();
         }
-        else if (node.getNodeType().equals(NodeType.STRING)) {
+        else if (node.getValue().getNodeType().equals(NodeType.ARITHMETIC_OPERATION)) {
+            value = node.getValue().evaluateExpression().toString();
+        }
+        else if (node.getValue().getNodeType().equals(NodeType.STRING)) {
             value = node.evaluateString().toString();
         }
 
